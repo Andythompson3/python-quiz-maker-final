@@ -3,11 +3,14 @@ from classes import *
 
 def rand_num(size):
     num_list = []
-    for _ in range(size):
-        num = random.randint(1, 30)  # Generates a random integer between 1 and 30 (inclusive)
-        num_list.append(num)
-    
-    return (num_list)
+
+    while len(num_list) < size:
+        num = random.randint(1, 30)
+
+        if num not in num_list:
+            num_list.append(num)
+
+    return num_list
 
 
 def add_user(username):
