@@ -6,7 +6,7 @@ Tasks to be done
 3. Database setup users (first name, last name, last log in)
 4. Bring data into question bank
 6. Bring data into users
-7. Create a random generator for creating random quiz
+X 7. Create a random generator for creating random quiz
 8. Create a quiz checker
 9. Create user class
 10. Create a User interface
