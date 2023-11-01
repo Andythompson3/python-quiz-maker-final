@@ -10,7 +10,7 @@ def main():
         print("4. Exit application")
 
         user_input = input("What is your option?: ")
-        # checks if the users input is a number or not
+        # checks if the users input is a number or not.
         if user_input.isnumeric():
             user_input = int(user_input) 
         else:
@@ -20,26 +20,27 @@ def main():
 
 
 
-            #  Add a user
+            #  option if user wants to Add a user.
         if user_input == 1:
             username = input("What is your username?: ")
             print(add_user(username))
             
-            # Take a quiz
+            # option if user wants to Take a quiz.
         elif user_input == 2:
             print("Welcome to are you smarter than a 5th grade")
             quiz_size = int(input("How many questions would you like your quiz to have?"))
             quiz_num = rand_num(quiz_size)
             
-            # update user
+            # option if user wants to update user.
         elif user_input == 3:
             pass
         
-            # Exit application
+            # option if user wants to Exit application.
         elif user_input == 4:
             on = False
          
         else:
+            #If the user puts in a number that is not between 1 and 4 they will get this reply.
             print("Sorry that is not a valid option")
     
     
