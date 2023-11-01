@@ -46,7 +46,7 @@ class QuizDB(DB.DBbase):
             Question_No INTEGER,
             Correct_Ans TEXT,
             user_answer TEXT,
-            Result TEXT,
+            Result INTEGER,
             FOREIGN KEY (Question_No) REFERENCES Questions(Question_no));
         """
         self.execute_script(sql_string)
@@ -139,3 +139,65 @@ class QuizDB(DB.DBbase):
     # This method allows you to delete a question and its associated options from the 'Questions' table.
         self._cursor.execute("DELETE FROM Questions WHERE Question_no = ?", (question_no,))
         self._conn.commit()
+
+
+    def quiz_maker(self):
+        # this method pulls random questions from the questions DB to create and administer each quiz. 
+        # this method is referenced in the UI when "take a quiz" is selected 
+        quiz_size = int(input("How many questions would you like your quiz to have? (max 30): "))
+        quiz_num = funct.rand_num(quiz_size)
+        print("") # spacer for console window 
+        
+        
+        for num in quiz_num:
+            try:
+                while True:
+                    self._cursor.execute("SELECT Question, Option1, Option2, Option3, Option4 FROM Questions WHERE Question_no = (?)", (num,))  # retrieve the question from the Question table in the database
+                    QaA = self.get_cursor.fetchall() # fetching questions and answers 
+                    print(QaA) # print the question and options 1-4
+                    
+                    # print(QaA[0]) # Quiz would look much cleaner in console window if Q and As were printed like this. 
+                    # print(QaA[1]) # not sure why this doesn't work, but gives error about answer variable being called before it's assigned 
+                    # print(QaA[2])
+                    # print(QaA[3])
+                    # print(QaA[4])
+                    
+                    answer = input("Please enter the letter that corresponds to the correct answer: ").upper() # Ask the user to input what they think the answer is and makes sure it's upper case
+                    
+                    self._cursor.execute("SELECT Correct_Ans FROM Questions WHERE Question_no = (?)", (num,))  # retrieve the correct answer
+                    correct_ans = self.get_cursor.fetchone() 
+                    
+                    if answer == 'A' or answer == 'B' or answer == 'C' or answer == 'D': # checks to make sure that the user has entered a valid option 
+
+                        if answer == correct_ans[0]: 
+                            result = 1
+                            print(input("Correct! Press Enter to continue."))
+                            break
+                        
+                        else:
+                            result = 0
+                            print(input("Incorrect. Press Enter to continue."))
+                            break     
+                    else:
+                        print("Please enter a valid letter option (A, B, C, or D).")
+                        print("") # spacer for console window 
+                    
+
+            except Exception as e:
+                print(e)  
+                
+            finally:
+                self._cursor.execute("INSERT INTO Exam (Question_No, Correct_Ans) SELECT Question_No, Correct_Ans FROM Questions WHERE Question_no = (?)", (num,)) # populates Exam table with question number and correct answer from the Questions table 
+                self._cursor.execute("UPDATE Exam SET user_answer = (?) WHERE Question_no = (?)", (answer,num)) # populates user answers to Exam table
+                self._cursor.execute("UPDATE Exam SET Result = (?) WHERE Question_no = (?)", (result,num)) # populate the result column of the Exam table
+                self._conn.commit()
+                
+
+    def quiz_grader(self): 
+        # this method grades quizes and is referenced in the UI when "take a quiz" is selected 
+        self._cursor.execute("SELECT Result FROM Exam;") # selecting results column from exam table 
+        results = self.get_cursor.fetchall() # fetching results list 
+        results_sum = sum([sum(i) for i in results]) # summing total points
+        grade = (results_sum / len(results)) * 100 # calculating grade percentage 
+        print(f"You scored {grade}%")
+        print(input("Press Enter to continue."))
