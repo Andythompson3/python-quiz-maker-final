@@ -1,4 +1,7 @@
-from func_list import *
+# from func_list import * # EC - this type of import (using the *) didn't work for me, so I imported as below - feel free to change back! 
+import func_list as fl
+import Quiz_Database_code as qz
+
 def main():
     on = True
     while on:
@@ -28,8 +31,11 @@ def main():
             # option if user wants to Take a quiz.
         elif user_input == 2:
             print("Welcome to are you smarter than a 5th grade")
-            quiz_size = int(input("How many questions would you like your quiz to have?"))
-            quiz_num = rand_num(quiz_size)
+            
+            db = qz.QuizDB("quiz_db.sqlite")
+            
+            db.quiz_maker()
+            db.quiz_grader()
             
             # option if user wants to update user.
         elif user_input == 3:
