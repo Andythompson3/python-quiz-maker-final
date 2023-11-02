@@ -23,6 +23,7 @@ class QuizDB(DB.DBbase):
 
         CREATE TABLE User (
             User_ID INTEGER PRIMARY KEY,
+            User_Name TEXT NOT NULL,
             First_Name TEXT NOT NULL,
             Last_Name TEXT NOT NULL,
             Email_ID TEXT UNIQUE NOT NULL,
@@ -40,6 +41,7 @@ class QuizDB(DB.DBbase):
         CREATE TABLE Result (
             Report_No INTEGER PRIMARY KEY,
             User_ID INTEGER,
+            User_Name TEXT NOT NULL,
             Results TEXT NOT NULL,
             FOREIGN KEY (User_ID) REFERENCES User(User_ID));
 
@@ -58,14 +60,13 @@ class QuizDB(DB.DBbase):
         # into the 'User' table.
         funct.insert_values(self)
 
-    def insert_user(self, first_name, last_name, email_id, dob):
+    def insert_user(self, user_name, first_name, last_name, email_id, dob):
         # Insert a new user's information into the 'User' table.
         # This method inserts the provided user information into the 'User' table, and the changes are committed to the database.
-        self._cursor.execute("INSERT INTO User (First_Name, Last_Name, Email_ID, DOB) VALUES (?, ?, ?, ?)",
-                             (first_name, last_name, email_id, dob))
+        self._cursor.execute("INSERT INTO User (User_Name, First_Name, Last_Name, Email_ID, DOB) VALUES (?, ?, ?, ?, ?)",
+                             (user_name, first_name, last_name, email_id, dob))
         self._conn.commit()
-
-    def update_user(self, user_id, first_name=None, last_name=None, email_id=None, dob=None):
+    def update_user(self, user_name, first_name=None, last_name=None, email_id=None, dob=None):
         """
         This method allows you to update user information in the 'User' table, such as first name, last name,
         email ID, and date of birth. You can specify which fields to update by providing their new values.
@@ -86,8 +87,8 @@ class QuizDB(DB.DBbase):
             query += "DOB = ?, "
             data.append(dob)
         query = query[:-2]
-        query += " WHERE User_ID = ?"
-        data.append(user_id)
+        query += " WHERE User_Name = ?"
+        data.append(user_name)
         self._cursor.execute(query, tuple(data))
         self._conn.commit()
 
@@ -148,6 +149,7 @@ class QuizDB(DB.DBbase):
         # this method pulls random questions from the questions DB to create and administer each quiz.
         # this method is referenced in the UI when "take a quiz" is selected
         quiz_size = int(input("How many questions would you like your quiz to have? (max 30): "))
+        self.User_name = input("Please Enter User Name before entering to exam :")
         quiz_num = funct.rand_num(quiz_size)
         print("")  # spacer for console window
 
@@ -213,8 +215,8 @@ class QuizDB(DB.DBbase):
             results = self.get_cursor.fetchall()  # fetching results list
             # results_sum = sum([sum(i) for i in results])  # summing total points
             results_sum = sum([sum(i) for i in results])
-            grade = (results_sum / len(results)) * 100  # calculating grade percentage
-            print(f"You scored {grade}%")
+            self.grade = (results_sum / len(results)) * 100  # calculating grade percentage
+            print(f"{self.User_name} You scored {self.grade}%")
             print(input("Press Enter to continue."))
 
         except Exception as e:
