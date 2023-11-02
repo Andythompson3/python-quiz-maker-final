@@ -11,11 +11,11 @@ db.reset_database()
 # db.update_question(1,correct_ans="B")
 # db.delete_question(1)
 # User
-db.user_insert_values()
+# db.user_insert_values()
 # db.update_user(1, last_name="T")
 # db.delete_user(1)
 #Exam
-db.close_db()
+
 
 def main():
     on = True
@@ -59,7 +59,7 @@ def main():
             update_last_name = input("What is your last name: ")
             update_email_id = input("What is your email: ")
             update_dob = input("When is your birthday (DD-MM-YYYY): ")
-            qz.update_user( update_id, update_first_name, update_last_name, update_email_id, update_dob)
+            qz.update_user(update_id, update_first_name, update_last_name, update_email_id, update_dob)
         
             # option if user wants to Exit application.
         elif user_input == 4:
@@ -70,6 +70,7 @@ def main():
             #If the user puts in a number that is not between 1 and 4 they will get this reply.
             print("Sorry that is not a valid option")
     
+    db.close_db()
     
 
 if __name__ == "__main__":
