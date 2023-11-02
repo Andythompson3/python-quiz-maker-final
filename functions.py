@@ -1,5 +1,4 @@
 import random
-from classes import *
 
 def insert_values(db_instance):
     #This is a function that asks users to put in user information and then it will call the class that creates an instance of the user class.
