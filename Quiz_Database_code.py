@@ -195,9 +195,13 @@ class QuizDB(DB.DBbase):
 
     def quiz_grader(self): 
         # this method grades quizes and is referenced in the UI when "take a quiz" is selected 
-        self._cursor.execute("SELECT Result FROM Exam;") # selecting results column from exam table 
-        results = self.get_cursor.fetchall() # fetching results list 
-        results_sum = sum([sum(i) for i in results]) # summing total points
-        grade = (results_sum / len(results)) * 100 # calculating grade percentage 
-        print(f"You scored {grade}%")
-        print(input("Press Enter to continue."))
+        try:
+            self._cursor.execute("SELECT Result FROM Exam;") # selecting results column from exam table 
+            results = self.get_cursor.fetchall() # fetching results list 
+            results_sum = sum([sum(i) for i in results]) # summing total points
+            grade = (results_sum / len(results)) * 100 # calculating grade percentage 
+            print(f"You scored {grade}%")
+            print(input("Press Enter to continue."))
+            
+        except Exception as e:
+                print(e)  
