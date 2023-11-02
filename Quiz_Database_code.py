@@ -6,13 +6,13 @@ class QuizDB(DB.DBbase):
         super().__init__(db_name)
 
     def reset_database(self):
-    """
-    This function drops the existing tables if they exist and creates the following tables:
-    - User: Stores user information.
-    - Questions: Stores information about questions and their correct answers.
-    - Result: Stores user results for exams.
-    - Exam: Stores individual exam results.
-    """
+        """
+        This function drops the existing tables if they exist and creates the following tables:
+        - User: Stores user information.
+        - Questions: Stores information about questions and their correct answers.
+        - Result: Stores user results for exams.
+        - Exam: Stores individual exam results.
+        """
         sql_string = """
         DROP TABLE IF EXISTS User;
         DROP TABLE IF EXISTS Result;
@@ -63,10 +63,10 @@ class QuizDB(DB.DBbase):
         self._conn.commit()
 
     def update_user(self, user_id, first_name=None, last_name=None, email_id=None, dob=None):
-    """
-    This method allows you to update user information in the 'User' table, such as first name, last name,
-    email ID, and date of birth. You can specify which fields to update by providing their new values.
-    """
+        """
+        This method allows you to update user information in the 'User' table, such as first name, last name,
+        email ID, and date of birth. You can specify which fields to update by providing their new values.
+        """
         query = "UPDATE User SET "
         data = []
 

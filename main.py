@@ -1,6 +1,21 @@
 # from func_list import * # EC - this type of import (using the *) didn't work for me, so I imported as below - feel free to change back! 
-import func_list as fl
+from functions import *
 import Quiz_Database_code as qz
+import Quiz_Database_code as qz
+
+
+db = qz.QuizDB("quiz_db.sqlite")
+# Questions
+db.reset_database()
+# db.insert_questions("ProjQuestions.csv")
+# db.update_question(1,correct_ans="B")
+# db.delete_question(1)
+# User
+db.user_insert_values()
+# db.update_user(1, last_name="T")
+# db.delete_user(1)
+#Exam
+db.close_db()
 
 def main():
     on = True
@@ -26,7 +41,7 @@ def main():
             #  option if user wants to Add a user.
         if user_input == 1:
             username = input("What is your username?: ")
-            print(add_user(username))
+            print(insert_values(db))
             
             # option if user wants to Take a quiz.
         elif user_input == 2:
@@ -39,11 +54,17 @@ def main():
             
             # option if user wants to update user.
         elif user_input == 3:
-            pass
+            update_id = input("What is the ID you would like to update?")
+            update_first_name = input("What is your updaetd first name: ")
+            update_last_name = input("What is your last name: ")
+            update_email_id = input("What is your email: ")
+            update_dob = input("When is your birthday (DD-MM-YYYY): ")
+            qz.update_user( update_id, update_first_name, update_last_name, update_email_id, update_dob)
         
             # option if user wants to Exit application.
         elif user_input == 4:
             on = False
+            break 
          
         else:
             #If the user puts in a number that is not between 1 and 4 they will get this reply.
