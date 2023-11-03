@@ -21,7 +21,7 @@ db.insert_questions("ProjQuestions.csv")
 def main():
     on = True
     while on:
-        print("\nHello, welcome to are you smarter than a 5th grade, please select on of the following options")
+        print("\nHello, welcome to are you smarter than a 5th grader, please select on of the following options")
 
         print("1. Add a user")
         print("2. Take a quiz")
