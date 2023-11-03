@@ -48,7 +48,6 @@ def main():
             while True:
                 quiz_size = input("How many questions would you like your quiz to have? (max 30): ")
                 try:
-                    number = int(quiz_size)
                     quiz_size = int(quiz_size)
                     if 1 <= quiz_size <= 30:# Check if the input is within the desired range
                         break  # Valid input, exit the loop
@@ -80,7 +79,7 @@ def main():
             db.update_user(update_user_name, update_first_name, update_last_name, update_email_id, update_dob)
 
             print(f"{update_user_name}, your details have been updated.")
-
+        # option if user wants to view results
         elif user_input ==4:
             User_name= input("Please Enter your user name: ")
             # if User_name is not None:

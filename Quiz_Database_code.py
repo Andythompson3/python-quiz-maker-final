@@ -145,10 +145,28 @@ class QuizDB(DB.DBbase):
         self._cursor.execute("DELETE FROM Questions WHERE Question_no = ?", (question_no,))
         self._conn.commit()
 
+    def username_exists(self, username):
+        # Query the database to check if the username exists in the User table
+        query = "SELECT 1 FROM User WHERE User_Name = ?"
+        self._cursor.execute(query, (username,))
+        result = self._cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+            
     def quiz_maker(self, quiz_size):
         # this method pulls random questions from the questions DB to create and administer each quiz.
         # this method is referenced in the UI when "take a quiz" is selected
         self.User_name = input("Please Enter User Name before entering to exam :")
+        if self.username_exists(self.User_name):
+            # Username exists in the database
+            quiz_num = funct.rand_num(quiz_size)
+            print("")  # Spacer for the console window
+        else:
+            print("Username does not exist in the database. Please register or enter a valid username.")
+            
         quiz_num = funct.rand_num(quiz_size)
         print("")  # spacer for console window
 
@@ -221,3 +239,4 @@ class QuizDB(DB.DBbase):
 
         except Exception as e:
             print(e)
+
