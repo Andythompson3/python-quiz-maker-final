@@ -164,66 +164,69 @@ class QuizDB(DB.DBbase):
             # Username exists in the database
             quiz_num = funct.rand_num(quiz_size)
             print("")  # Spacer for the console window
+            quiz_num = funct.rand_num(quiz_size)
+
+            for num in quiz_num:
+                answer = None
+                result =0
+                try:
+                    while True:
+                    # Fetching the questions
+                        self._cursor.execute("SELECT Question FROM Questions WHERE Question_no = ?", (num,))
+                        question = self._cursor.fetchall()[0][0]
+                    # Fetching the options
+                        self._cursor.execute(
+                        "SELECT Option1, Option2, Option3, Option4 FROM Questions WHERE Question_no = ?", (num,))
+                        options = self._cursor.fetchall()[0]
+
+                        print(question)
+                        print(options[0])
+                        print(options[1])
+                        print(options[2])
+                        print(options[3])
+
+                        answer= input(
+                            "Please enter the letter that corresponds to the correct answer: ").upper()  # Ask the user to input what they think the answer is and makes sure it's upper case
+
+                        self._cursor.execute("SELECT Correct_Ans FROM Questions WHERE Question_no = (?)",
+                                         (num,))  # retrieve the correct answer
+                        correct_ans = self.get_cursor.fetchone()
+
+                        if answer == 'A' or answer == 'B' or answer == 'C' or answer == 'D':  # checks to make sure that the user has entered a valid option
+
+                            if answer == correct_ans[0]:
+                                result = 1
+                                print(input("Correct! Press Enter to continue."))
+                                break
+
+                            else:
+                                result = 0
+                                print(input("Incorrect. Press Enter to continue."))
+                                break
+                        else:
+                            print("Please enter a valid letter option (A, B, C, or D).")
+                            print("")  # spacer for console window
+
+
+                except Exception as e:
+                    print(e)
+
+                finally:
+                    self._cursor.execute(
+                        "INSERT INTO Exam (Question_No, Correct_Ans) SELECT Question_No, Correct_Ans FROM Questions WHERE Question_no = (?)",
+                        (num,))  # populates Exam table with question number and correct answer from the Questions table
+                    self._cursor.execute("UPDATE Exam SET user_answer = (?) WHERE Question_no = (?)",
+                                     (answer, num))  # populates user answers to Exam table
+                    self._cursor.execute("UPDATE Exam SET Result = (?) WHERE Question_no = (?)",
+                                     (result, num))  # populate the result column of the Exam table
+                    self._conn.commit()
+            return True
         else:
             print("Username does not exist in the database. Please register or enter a valid username.")
+            return False
             
-        quiz_num = funct.rand_num(quiz_size)
-        print("")  # spacer for console window
-
-        for num in quiz_num:
-            answer = None
-            result =0
-            try:
-                while True:
-                    # Fetching the questions
-                    self._cursor.execute("SELECT Question FROM Questions WHERE Question_no = ?", (num,))
-                    question = self._cursor.fetchall()[0][0]
-                    # Fetching the options
-                    self._cursor.execute(
-                        "SELECT Option1, Option2, Option3, Option4 FROM Questions WHERE Question_no = ?", (num,))
-                    options = self._cursor.fetchall()[0]
-
-                    print(question)
-                    print(options[0])
-                    print(options[1])
-                    print(options[2])
-                    print(options[3])
-
-                    answer= input(
-                        "Please enter the letter that corresponds to the correct answer: ").upper()  # Ask the user to input what they think the answer is and makes sure it's upper case
-
-                    self._cursor.execute("SELECT Correct_Ans FROM Questions WHERE Question_no = (?)",
-                                         (num,))  # retrieve the correct answer
-                    correct_ans = self.get_cursor.fetchone()
-
-                    if answer == 'A' or answer == 'B' or answer == 'C' or answer == 'D':  # checks to make sure that the user has entered a valid option
-
-                        if answer == correct_ans[0]:
-                            result = 1
-                            print(input("Correct! Press Enter to continue."))
-                            break
-
-                        else:
-                            result = 0
-                            print(input("Incorrect. Press Enter to continue."))
-                            break
-                    else:
-                        print("Please enter a valid letter option (A, B, C, or D).")
-                        print("")  # spacer for console window
-
-
-            except Exception as e:
-                print(e)
-
-            finally:
-                self._cursor.execute(
-                    "INSERT INTO Exam (Question_No, Correct_Ans) SELECT Question_No, Correct_Ans FROM Questions WHERE Question_no = (?)",
-                    (num,))  # populates Exam table with question number and correct answer from the Questions table
-                self._cursor.execute("UPDATE Exam SET user_answer = (?) WHERE Question_no = (?)",
-                                     (answer, num))  # populates user answers to Exam table
-                self._cursor.execute("UPDATE Exam SET Result = (?) WHERE Question_no = (?)",
-                                     (result, num))  # populate the result column of the Exam table
-                self._conn.commit()
+            
+        
 
     def quiz_grader(self,quiz_number):
         # this method grades quizes and is referenced in the UI when "take a quiz" is selected

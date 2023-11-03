@@ -55,8 +55,11 @@ def main():
                         print("Number needs to be between 1 and 30")
                 except ValueError:
                     print("Please enter a number.")
-            db.quiz_maker(quiz_size)
-            db.quiz_grader(quiz_size)
+            quiz_maker = db.quiz_maker(quiz_size)
+            if quiz_maker:
+                db.quiz_grader(quiz_size)
+            else:
+                continue
 
             # option if user wants to update user.
         elif user_input == 3:
