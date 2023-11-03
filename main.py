@@ -44,7 +44,7 @@ def main():
 
             # option if user wants to Take a quiz.
         elif user_input == 2:
-            print("Welcome to are you smarter than a 5th grade")
+            print("Welcome to are you smarter than a 5th grader")
             while True:
                 quiz_size = input("How many questions would you like your quiz to have? (max 30): ")
                 try:
