@@ -26,8 +26,7 @@ def main():
         print("1. Add a user")
         print("2. Take a quiz")
         print("3. update user")
-        print("4. View Result")
-        print("5. Exit application")
+        print("4. Exit application")
 
         user_input = input("What is your option?: ")
         # checks if the users input is a number or not.
@@ -83,18 +82,10 @@ def main():
             db.update_user(update_user_name, update_first_name, update_last_name, update_email_id, update_dob)
 
             print(f"{update_user_name}, your details have been updated.")
-        # option if user wants to view results
+        # option if user wants to exit application
         elif user_input ==4:
-            User_name= input("Please Enter your user name: ")
-            # if User_name is not None:
-            #     # db.view_result(User_name)
-            # else:
-            #     # print("Please try again.")
-
-            # option if user wants to Exit application.
-        elif user_input == 5:
             on = False
-            break
+            break   
 
         else:
             # If the user puts in a number that is not between 1 and 4 they will get this reply.

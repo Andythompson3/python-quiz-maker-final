@@ -40,6 +40,12 @@ class QuizDB(DB.DBbase):
             Option4 TEXT NOT NULL,
             Correct_Ans TEXT NOT NULL);
 
+        CREATE TABLE Result (
+            Report_No INTEGER PRIMARY KEY,
+            User_ID INTEGER,
+            User_Name TEXT NOT NULL,
+            Results TEXT NOT NULL,
+            FOREIGN KEY (User_ID) REFERENCES User(User_ID));
 
         CREATE TABLE Exam (
             Result_ID INTEGER PRIMARY KEY,
