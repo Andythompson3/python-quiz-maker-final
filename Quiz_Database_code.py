@@ -255,12 +255,12 @@ class QuizDB(DB.DBbase):
 class Person:
     def __init__(self, db):
         self.db = db
-        self.user_name = input("What is your username: ")
+        self.user_name = input("What is your username: ").strip()
         self.first_name = input("What is your first name: ")
         self.last_name = input("What is your last name: ")
         self.email_id = input("What is your email: ")
         self.dob = input("When is your birthday (DD-MM-YYYY): ")
-        self.password = input("What is your password: ")
+        self.password = input("What is your password: ").strip()
         db.insert_user(self.user_name, self.first_name, self.last_name, self.email_id, self.dob, self.password)
 
     def get_user_first(self):
