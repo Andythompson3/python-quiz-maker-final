@@ -45,8 +45,19 @@ def main():
             # option if user wants to Take a quiz.
         elif user_input == 2:
             print("Welcome to are you smarter than a 5th grade")
-            db.quiz_maker()
-            db.quiz_grader()
+            while True:
+                quiz_size = input("How many questions would you like your quiz to have? (max 30): ")
+                try:
+                    number = int(quiz_size)
+                    quiz_size = int(quiz_size)
+                    if 1 <= quiz_size <= 30:# Check if the input is within the desired range
+                        break  # Valid input, exit the loop
+                    else:
+                        print("Number needs to be between 1 and 30")
+                except ValueError:
+                    print("Please enter a number.")
+            db.quiz_maker(quiz_size)
+            db.quiz_grader(quiz_size)
 
             # option if user wants to update user.
         elif user_input == 3:

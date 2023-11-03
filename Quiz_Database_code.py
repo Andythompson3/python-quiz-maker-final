@@ -145,10 +145,9 @@ class QuizDB(DB.DBbase):
         self._cursor.execute("DELETE FROM Questions WHERE Question_no = ?", (question_no,))
         self._conn.commit()
 
-    def quiz_maker(self):
+    def quiz_maker(self, quiz_size):
         # this method pulls random questions from the questions DB to create and administer each quiz.
         # this method is referenced in the UI when "take a quiz" is selected
-        quiz_size = int(input("How many questions would you like your quiz to have? (max 30): "))
         self.User_name = input("Please Enter User Name before entering to exam :")
         quiz_num = funct.rand_num(quiz_size)
         print("")  # spacer for console window
@@ -208,11 +207,12 @@ class QuizDB(DB.DBbase):
                                      (result, num))  # populate the result column of the Exam table
                 self._conn.commit()
 
-    def quiz_grader(self):
+    def quiz_grader(self,quiz_number):
         # this method grades quizes and is referenced in the UI when "take a quiz" is selected
         try:
-            self._cursor.execute("SELECT Result FROM Exam;")  # selecting results column from exam table
-            results = self.get_cursor.fetchall()  # fetching results list
+            query = f"SELECT Result FROM Exam ORDER BY rowid DESC LIMIT {quiz_number};"
+            self._cursor.execute(query)  # selecting results column from exam table
+            results = self._cursor.fetchall()  # fetching results list
             # results_sum = sum([sum(i) for i in results])  # summing total points
             results_sum = sum([sum(i) for i in results])
             self.grade = (results_sum / len(results)) * 100  # calculating grade percentage
