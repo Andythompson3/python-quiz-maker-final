@@ -27,7 +27,9 @@ class QuizDB(DB.DBbase):
             First_Name TEXT NOT NULL,
             Last_Name TEXT NOT NULL,
             Email_ID TEXT UNIQUE NOT NULL,
-            DOB DATE);
+            DOB DATE,
+            Password TEXT NOT NULL);
+            
 
         CREATE TABLE Questions (
             Question_no INTEGER PRIMARY KEY,
@@ -55,16 +57,16 @@ class QuizDB(DB.DBbase):
         """
         self.execute_script(sql_string)
 
-    def user_insert_values(self):
-        # This function is a wrapper for the 'insert_user' method and allows for inserting user information
-        # into the 'User' table.
-        funct.insert_values(self)
+    # def user_insert_values(self):
+    #     # This function is a wrapper for the 'insert_user' method and allows for inserting user information
+    #     # into the 'User' table.
+    #     funct.insert_values(self)
 
-    def insert_user(self, user_name, first_name, last_name, email_id, dob):
+    def insert_user(self, user_name, first_name, last_name, email_id, dob, password):
         # Insert a new user's information into the 'User' table.
         # This method inserts the provided user information into the 'User' table, and the changes are committed to the database.
-        self._cursor.execute("INSERT INTO User (User_Name, First_Name, Last_Name, Email_ID, DOB) VALUES (?, ?, ?, ?, ?)",
-                             (user_name, first_name, last_name, email_id, dob))
+        self._cursor.execute("INSERT INTO User (User_Name, First_Name, Last_Name, Email_ID, DOB, Password) VALUES (?, ?, ?, ?, ?, ?)",
+                             (user_name, first_name, last_name, email_id, dob, password))
         self._conn.commit()
     def update_user(self, user_name, first_name=None, last_name=None, email_id=None, dob=None):
         """
@@ -155,12 +157,24 @@ class QuizDB(DB.DBbase):
             return True
         else:
             return False
-            
+        
+    def password_check(self, username, password_guess):
+        # Query the database to check if the username exists in the User table
+        query = "SELECT Password FROM User WHERE User_Name = ?"
+        self._cursor.execute(query, (username,))
+        result = self._cursor.fetchone()
+
+        if result and password_guess == result[0]:
+            return True
+        else:
+            return False
+               
     def quiz_maker(self, quiz_size):
         # this method pulls random questions from the questions DB to create and administer each quiz.
         # this method is referenced in the UI when "take a quiz" is selected
         self.User_name = input("Please Enter User Name before entering to exam :")
-        if self.username_exists(self.User_name):
+        self.password = input("Please Enter password before entering to exam :")
+        if self.username_exists(self.User_name) and self.password_check(self.User_name, self.password):
             # Username exists in the database
             quiz_num = funct.rand_num(quiz_size)
             print("")  # Spacer for the console window
@@ -219,10 +233,10 @@ class QuizDB(DB.DBbase):
                                      (answer, num))  # populates user answers to Exam table
                     self._cursor.execute("UPDATE Exam SET Result = (?) WHERE Question_no = (?)",
                                      (result, num))  # populate the result column of the Exam table
-                    self._conn.commit()
+                    self._conn.commit()   
             return True
         else:
-            print("Username does not exist in the database. Please register or enter a valid username.")
+            print("Username or Password is incorrect or Username does not exsist.")
             return False
             
             
@@ -242,4 +256,19 @@ class QuizDB(DB.DBbase):
 
         except Exception as e:
             print(e)
+        
 
+class Person:
+    def __init__(self, db):
+        self.db = db
+        self.user_name = input("What is your username: ")
+        self.first_name = input("What is your first name: ")
+        self.last_name = input("What is your last name: ")
+        self.email_id = input("What is your email: ")
+        self.dob = input("When is your birthday (DD-MM-YYYY): ")
+        self.password = input("What is your password: ")
+        db.insert_user(self.user_name, self.first_name, self.last_name, self.email_id, self.dob, self.password)
+
+    def get_user_first(self):
+        return self.first_name
+            

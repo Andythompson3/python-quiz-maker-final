@@ -39,7 +39,8 @@ def main():
 
             #  option if user wants to Add a user.
         if user_input == 1:
-            first_name = insert_values(db)
+            person_instance = qz.Person(db)
+            first_name = person_instance.get_user_first()
             print(f"{first_name}, your details have been updated.")
 
             # option if user wants to Take a quiz.
