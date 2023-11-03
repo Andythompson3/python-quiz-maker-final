@@ -159,7 +159,7 @@ class QuizDB(DB.DBbase):
             return False
         
     def password_check(self, username, password_guess):
-        # Query the database to check if the username exists in the User table
+        # This function is used to check if the password the user put in is the same as in the database
         query = "SELECT Password FROM User WHERE User_Name = ?"
         self._cursor.execute(query, (username,))
         result = self._cursor.fetchone()
